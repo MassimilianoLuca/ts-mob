@@ -1,0 +1,66 @@
+# TS-Mob Default Configuration
+# Hyperparameters aligned with the paper (Appendix B)
+
+# --- General ---
+seed: 1234
+device: "cpu"  # "cpu" or "cuda"
+
+# --- Data ---
+data:
+  dataset: "bike_nyc"            # Options: bike_nyc, taxi_bj, spain_od
+  data_dir: "./data"
+  input_length: 32               # Lookback window L
+  horizon: 1                     # Forecast horizon H
+  train_fraction: 0.8            # Train/test split
+  exclude_self_flows: true       # Exclude i == j pairs
+
+# --- Geographic & Social-Aware Module (Gravity) ---
+gravity:
+  dim_hidden: 256
+  num_layers: 7                  # 7 FF layers as in the paper
+  dropout: 0.35
+  activation: "leaky_relu"
+  lr: 5.0e-6
+  momentum: 0.9
+  optimizer: "rmsprop"
+  epochs: 15
+  batch_size: 1
+  frac_true_dest: 0.5            # Fraction of true destinations in training
+  dim_dests: 512                  # Max destinations per origin during training
+
+  # Feature dimensions (per tile):
+  # population (1) + POI categories (16) = 17 per location
+  # Input = origin_features(17) + dest_features(17) + distance(1) = 35
+  num_poi_categories: 16
+
+# --- Temporal Module (TimesFM Fine-Tuning) ---
+timesfm:
+  model_name: "google/timesfm-2.5-200m-pytorch"
+  optimizer: "sgd"
+  lr: 5.0e-4
+  momentum: 0.9
+  gradient_clip: 1.0
+  epochs: 50
+  warmup_epochs: 25
+  loss: "mse"
+  max_context: 512
+  max_horizon: 128
+
+  # Covariate columns
+  covariates:
+    - "attractiveness"           # a_ij from gravity block
+    - "precipitation_mm"         # Weather: precipitation
+    - "temperature_c"            # Weather: temperature (Celsius)
+    - "hour_of_day"              # Calendar: hour
+
+# --- Evaluation ---
+evaluation:
+  metrics:
+    - "rmse"
+    - "mae"
+    - "cpc"
+
+# --- Output ---
+output:
+  results_dir: "./results"
+  save_model: true
