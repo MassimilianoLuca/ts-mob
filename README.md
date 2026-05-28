@@ -274,19 +274,6 @@ For testing with synthetic data, a CPU-only machine is sufficient.
 
 ---
 
-## Citation
-
-```bibtex
-@inproceedings{tsmob2025,
-  title={TS-Mob: Social and Geographical-Aware Time Series Foundation-Model Framework for Human Mobility Prediction},
-  author={YYY et al.},
-  booktitle={Proceedings of the ACM SIGKDD Conference on Knowledge Discovery and Data Mining},
-  year={2025}
-}
-```
-
----
-
 ## License
 
 This project is provided for research purposes. See corresponding licenses for [TimesFM](https://github.com/google-research/timesfm/blob/master/LICENSE) and [Deep Gravity](https://github.com/scikit-mobility/DeepGravity).
